@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+candidate_embeddings.npy
+candidate_index.faiss
