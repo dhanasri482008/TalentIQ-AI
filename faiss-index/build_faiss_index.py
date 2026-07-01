@@ -1,25 +1,32 @@
-import faiss
+import os
 import numpy as np
+import faiss
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+embedding_path = os.path.join(
+    BASE_DIR,
+    "EMBEDDING",
+    "candidate_embeddings.npy"
+)
 
 print("Loading embeddings...")
-
-embeddings = np.load("../EMBEDDING/candidate_embeddings.npy")
-
-print("Embeddings Shape:", embeddings.shape)
-
-# Convert to float32 (required by FAISS)
-embeddings = embeddings.astype("float32")
+embeddings = np.load(embedding_path)
 
 dimension = embeddings.shape[1]
 
-print("Creating FAISS index...")
-
 index = faiss.IndexFlatL2(dimension)
 
+print("Adding embeddings...")
 index.add(embeddings)
 
-print("Total Candidates Indexed:", index.ntotal)
+index_path = os.path.join(
+    BASE_DIR,
+    "faiss-index",
+    "candidate_index.faiss"
+)
 
-faiss.write_index(index, "candidate_index.faiss")
+print("Saving index...")
+faiss.write_index(index, index_path)
 
-print("FAISS Index Saved Successfully!")
+print("✅ FAISS index created successfully!")
